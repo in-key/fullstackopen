@@ -1,3 +1,5 @@
+### title 0.4: New note diagram
+
 ```mermaid
 sequenceDiagram
     browser->>server : HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
@@ -14,7 +16,7 @@ sequenceDiagram
     Note over browser : browser executing rest of main.js that formats data.json into unordered list of notes and render the web page
 ```
 
-###title 0.5: Single page app diagram
+### title 0.5: Single page app diagram
 
 ```mermaid
 sequenceDiagram
@@ -30,7 +32,7 @@ sequenceDiagram
     Note over browser : browser executing rest of main.js that formats data.json into unordered list of notes and render the web page
 ```
 
-###title 0.6: New note in Single page app diagram
+### title 0.6: New note in Single page app diagram
 
 ```mermaid
 sequenceDiagram
