@@ -2,21 +2,21 @@
 
 ```mermaid
 sequenceDiagram
-browser ->> server : HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
-server ->> browser : HTTP 302 REDIRECT /exampleapp/notes
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
-server ->> browser : HTML code
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
-server ->> browser : main.css
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
-server ->> browser : main.js
+browser->>server : HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+server->>browser : HTTP 302 REDIRECT /exampleapp/notes
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server->>browser : HTML code
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server->>browser : main.css
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server->>browser : main.js
 note over browser :
     browser executing main.js
     that requests JSON from
     /exampleapp/data.json
     end note
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
-server ->> browser : data.json
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server->>browser : data.json
 note over browser :
     browser executing rest of
     main.js that formats data.json
@@ -29,19 +29,19 @@ note over browser :
 
 ```mermaid
 sequenceDiagram
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
-server ->> browser : HTML code
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
-server ->> browser : main.css
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
-server ->> browser : spa.js
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server->>browser : HTML code
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server->>browser : main.css
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server->>browser : spa.js
 note over browser :
     browser executing main.js
     that requests JSON from
     /exampleapp/data.json
     end note
-browser ->> server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
-server ->> browser : data.json
+browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server->>browser : data.json
 note over browser :
     browser executing rest of
     main.js that formats data.json
@@ -54,8 +54,8 @@ note over browser :
 
 ```mermaid
 sequenceDiagram
-browser ->> server : HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
-server ->> browser : 201 code response {"message":"note created"}
+browser->>server : HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server->>browser : 201 code response {"message":"note created"}
 note over browser :
     form onsubmit prevent default
     (no redirect), push new note
