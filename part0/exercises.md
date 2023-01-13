@@ -1,5 +1,3 @@
-###title 0.4: New note diagram
-
 ```mermaid
 sequenceDiagram
     browser->>server : HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
@@ -10,19 +8,17 @@ sequenceDiagram
     server->>browser : main.css
     browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
     server->>browser : main.js
-    note over browser :
+    Note over browser :
         browser executing main.js
         that requests JSON from
         /exampleapp/data.json
-    end note
     browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
     server->>browser : data.json
-    note over browser :
+    Note over browser :
         browser executing rest of
         main.js that formats data.json
         into unordered list of notes
         and render the web page
-    end note
 ```
 
 ###title 0.5: Single page app diagram
@@ -39,7 +35,6 @@ sequenceDiagram
         browser executing main.js
         that requests JSON from
         /exampleapp/data.json
-    end note
     browser->>server : HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
     server->>browser : data.json
     note over browser :
@@ -47,7 +42,6 @@ sequenceDiagram
         main.js that formats data.json
         into unordered list of notes
         and render the web page
-    end note
 ```
 
 ###title 0.6: New note in Single page app diagram
@@ -62,5 +56,4 @@ sequenceDiagram
         to notes array and redraws the
         note list on web page without
         refreshing the page
-    end note
 ```
