@@ -14,8 +14,8 @@ const Statistics = ({props}) => {
         <StatisticLine text='neutral' value={neutral}/>
         <StatisticLine text='bad' value={bad}/>
         <StatisticLine text='all' value={all}/>
-        <StatisticLine text='average' value={(good - bad) / all}/>
-        <StatisticLine text='positive' value={`${good / all * 100}% `}/>
+        <StatisticLine text='average' value={((good - bad) / all).toFixed(2)}/>
+        <StatisticLine text='positive' value={`${(good / all * 100).toFixed(2)}% `}/>
       </tbody>
     </table>
   )
