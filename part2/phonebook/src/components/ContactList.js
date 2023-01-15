@@ -8,6 +8,9 @@ const ContactList = ({personShown, persons, setPersons}) => {
             .then( res => {
                 setPersons(persons.filter( p => p.id !== person.id ));
             })
+            .catch( error => {
+                setPersons(persons.filter( p => p.id !== person.id));
+            })
         }
     }
 

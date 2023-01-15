@@ -1,6 +1,6 @@
 import contactService from '../services/Contacts';
 
-const ContactForm = ({newName, setNewName, persons, setPersons, newNumber, setNewNumber}) => {
+const ContactForm = ({newName, setNewName, persons, setPersons, newNumber, setNewNumber, setMessage, setError}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -16,9 +16,20 @@ const ContactForm = ({newName, setNewName, persons, setPersons, newNumber, setNe
           contactService
             .update(p.id, newContact)
             .then( returnedContact => {
+              setMessage(`Updated ${p.name}'s info`);
+              setTimeout(() => {
+                setMessage(null);
+              }, 5000);
               setPersons(persons.map( person => person.id !== p.id ? person : returnedContact));
               setNewName('');
               setNewNumber('');
+            })
+            .catch( error => {
+              setError(`Information of ${p.name} has already been removed from server`);
+              setTimeout(() => {
+                setError(null);
+              }, 5000);
+              setPersons(persons.filter( person => person.name !== p.name));
             })
         }
         return;
@@ -28,6 +39,10 @@ const ContactForm = ({newName, setNewName, persons, setPersons, newNumber, setNe
     contactService
       .create(newContact)
       .then( returnedContact => {
+        setMessage(`Added ${newContact.name}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
         setPersons(persons.concat(returnedContact));
         setNewName('');
         setNewNumber('');
