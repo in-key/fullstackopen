@@ -8,9 +8,7 @@ const Country = ({country}) => {
         <div key={country.name.common}>
             {country.name.common}
             <button onClick={() => setVisible(!visible)}>{visible ? `hide` : `show`}</button>
-            { visible &&
-                <CountryDetail country={country}/>
-            }
+            { visible && <CountryDetail country={country}/> }
         </div>
     )
 }
