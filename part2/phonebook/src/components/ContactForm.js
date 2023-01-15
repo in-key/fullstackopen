@@ -46,7 +46,13 @@ const ContactForm = ({newName, setNewName, persons, setPersons, newNumber, setNe
         setPersons(persons.concat(returnedContact));
         setNewName('');
         setNewNumber('');
-    })
+      })
+      .catch(error => {
+        setError(error.response.data.error);
+        setTimeout(() => {
+          setError(null);
+        }, 5000);
+      })
   }
 
   return (
