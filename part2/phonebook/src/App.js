@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Filter from './components/Filter';
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList';
-import axios from 'axios';
+import contactService from './services/Contacts';
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,10 +13,10 @@ const App = () => {
   const personShown = persons.filter( person => person.name.toLowerCase().includes(filter.toLowerCase()));
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    contactService
+      .getAll()
+      .then( initialContacts => {
+        setPersons( initialContacts )
       })
   }, [])
 
@@ -27,7 +27,7 @@ const App = () => {
       <h2>Add New Contact</h2>
       <ContactForm persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
       <h2>Numbers</h2>
-      <ContactList personShown={personShown}/>
+      <ContactList personShown={personShown} persons={persons} setPersons={setPersons}/>
     </div>
   )
 }
