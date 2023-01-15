@@ -1,5 +1,21 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
+
+app.use(express.json());
+
+const morganformat = (tokens, req, res) => {
+    return [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms',
+        JSON.stringify(req.body)
+    ].join(' ')
+}
+
+app.use(morgan(morganformat));
 
 let phonebook = [
     {
@@ -24,8 +40,6 @@ let phonebook = [
     }
 ];
 
-app.use(express.json());
-
 app.get('/api/persons', (req, res) => {
     res.json(phonebook);
 })
@@ -37,7 +51,6 @@ app.get('/info', (req, res) => {
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
     const person = phonebook.find( person => person.id === id );
-    console.log(person);
     if (person){
         res.json(person);
     } else {
@@ -70,7 +83,6 @@ app.post('/api/persons', (req, res) => {
 
     person.id = Math.floor(Math.random() * 10000000);
     phonebook = phonebook.concat(person);
-    console.log(phonebook);
     res.json(person);
 })
 
