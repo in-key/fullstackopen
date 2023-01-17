@@ -10,3 +10,14 @@ content-type: application/json
     "url": "bussyslayer.com",
     "likes": 5
 }
+
+###
+DELETE http://localhost:3003/api/blogs/63c4b11192065b94901f311b
+
+###
+PUT http://localhost:3003/api/blogs/63c4aecb18721de10cef7355
+content-type: application/json
+
+{
+    "likes": 60
+}
