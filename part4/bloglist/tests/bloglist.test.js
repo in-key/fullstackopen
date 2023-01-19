@@ -7,35 +7,63 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+const { route } = require('../app')
 
 describe('test blog routes', () => {
     beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash("password", 10)
+        const user = new User({
+            username: "testUsername",
+            name: "testName",
+            passwordHash: passwordHash
+        })
+
+        await user.save()
+
         await Blog.deleteMany({});
 
         for (let blog of helper.initialBlogs){
             let blogObj = new Blog(blog);
+            blogObj.user = user._id
             await blogObj.save()
+            user.blogs = user.blogs.concat(blogObj._id)
+            await user.save()
         }
     })
 
     test('HTTP GET request to the /api/blogs return the correct amount of blogs', async () => {
-        await api
+        const userResponse = await api
+                        .post('/api/login')
+                        .send({ username: 'testUsername', password: 'password'})
+
+        const blogs = await api
             .get('/api/blogs')
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(200)
             .expect('Content-Type', /application\/json/)
-
-        const blogs = await api.get('/api/blogs');
 
         expect(blogs.body).toHaveLength(helper.initialBlogs.length);
     })
 
     test('The unique identifier property of the blog posts is named id', async () => {
-        const res = await api.get('/api/blogs');
+        const userResponse = await api
+            .post('/api/login')
+            .send({ username: 'testUsername', password: 'password'})
+
+        const res = await api
+                    .get('/api/blogs')
+                    .set({ "Authorization": `bearer ${userResponse.body.token}`})
 
         expect(res.body[0].id).toBeDefined();
     })
 
     test('HTTP POST request to the /api/blogs URL successfully creates a new blog post', async () => {
+        const userResponse = await api
+            .post('/api/login')
+            .send({ username: 'testUsername', password: 'password'})
+
         const newBlog = {
             title: "Miss Fortune's Inside Scoop",
             author: "Miss Fortune",
@@ -46,10 +74,13 @@ describe('test blog routes', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const response = await api.get('/api/blogs')
+        const response = await api
+                        .get('/api/blogs')
+                        .set({ "Authorization": `bearer ${userResponse.body.token}`})
 
         const titles = response.body.map(r => r.title)
 
@@ -58,6 +89,10 @@ describe('test blog routes', () => {
     })
 
     test('if the likes property is missing from the request, it will default to the value 0', async () => {
+        const userResponse = await api
+            .post('/api/login')
+            .send({ username: 'testUsername', password: 'password'})
+
         const newBlog = {
             title: "Miss Fortune's Inside Scoop",
             author: "Miss Fortune",
@@ -67,10 +102,13 @@ describe('test blog routes', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const response = await api.get('/api/blogs')
+        const response = await api
+            .get('/api/blogs')
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
 
         const createdBlog = response.body.find( blog => blog.title === "Miss Fortune's Inside Scoop" );
 
@@ -79,6 +117,10 @@ describe('test blog routes', () => {
     })
 
     test('if the title or url properties are missing from the request data, the backend responds with the status code 400 Bad Request', async () => {
+        const userResponse = await api
+            .post('/api/login')
+            .send({ username: 'testUsername', password: 'password'})
+
         const blogWithoutTitle = {
             author: "Miss Fortune",
             url: "Misfortune.com",
@@ -94,20 +136,27 @@ describe('test blog routes', () => {
         await api
             .post('/api/blogs')
             .send(blogWithoutTitle)
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(400)
 
         await api
             .post('/api/blogs')
             .send(blogWithoutUrl)
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(400)
     })
 
     test('deleting a single blog post resource works', async () => {
+        const userResponse = await api
+            .post('/api/login')
+            .send({ username: 'testUsername', password: 'password'})
+
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
 
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
@@ -120,12 +169,17 @@ describe('test blog routes', () => {
     })
 
     test('updating the number of likes of an existing blog works', async () => {
+        const userResponse = await api
+            .post('/api/login')
+            .send({ username: 'testUsername', password: 'password'})
+
         const blogsAtStart = await helper.blogsInDb()
         const blogToUpdate = blogsAtStart[0]
 
         await api
             .put(`/api/blogs/${blogToUpdate.id}`)
             .send({ likes: 60 })
+            .set({ "Authorization": `bearer ${userResponse.body.token}`})
             .expect(200)
 
         const blogsAtEnd = await helper.blogsInDb()
@@ -137,12 +191,32 @@ describe('test blog routes', () => {
 
 describe('test user routes', () => {
     beforeEach(async () => {
+        // await User.deleteMany({})
+
+        // const passwordHash = await bcrypt.hash('magnum', 10)
+        // const user = new User({ username: 'test', passwordHash })
+
+        // await user.save()
         await User.deleteMany({})
 
-        const passwordHash = await bcrypt.hash('magnum', 10)
-        const user = new User({ username: 'test', passwordHash })
+        const passwordHash = await bcrypt.hash("password", 10)
+        const user = new User({
+            username: "testUsername",
+            name: "testName",
+            passwordHash: passwordHash
+        })
 
         await user.save()
+
+        await Blog.deleteMany({});
+
+        for (let blog of helper.initialBlogs){
+            let blogObj = new Blog(blog);
+            blogObj.user = user._id
+            await blogObj.save()
+            user.blogs = user.blogs.concat(blogObj._id)
+            await user.save()
+        }
     })
 
     test('users with username shorter than 3 characters are not created', async () => {

@@ -1,23 +1,21 @@
-const blogRouter = require('express').Router();
-const Blog = require('../models/blog');
-const User = require('../models/user');
+const blogRouter = require('express').Router()
+const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 blogRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({}).populate('user', {username: 1, name: 1})
+    const user = request.user
+    const blogs = await Blog.find({ user: user._id }).populate('user', {username: 1, name: 1})
 
     response.json(blogs)
 })
 
 blogRouter.post('/', async (request, response) => {
-    const user = await User.findOne({})
-
-    console.log(user)
-
+    const user = request.user
     const blog = new Blog({...request.body, user: user._id})
-
     blog.likes = blog.likes || 0
-
     const savedBlog = await blog.save()
+
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
@@ -25,17 +23,27 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (req, res) => {
-    const id = req.params.id
+    const user = req.user
+    const blog = await Blog.findById(req.params.id)
 
-    await Blog.findByIdAndDelete(id)
+    if (!(user._id.toString() === blog.user.toString())){
+        return res.status(401).json({ error: 'you are not authorized to delete requested blog' })
+    }
 
-    res.status(204).end()
+    await blog.remove()
+
+    return res.status(204).end()
 })
 
 blogRouter.put('/:id', async (req, res) => {
-    const id = req.params.id
+    const blog = await Blog.findById(req.params.id)
+    const user = req.user
 
-    const returnedBlog = await Blog.findByIdAndUpdate(id, req.body, {new: true})
+    if (!(user._id.toString() === blog.user.toString())){
+        return res.status(401).json({ error: 'you are not authorized to update requested blog' })
+    }
+
+    const returnedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {new: true})
 
     res.json(returnedBlog)
 })
