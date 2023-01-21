@@ -31,6 +31,11 @@ blogRouter.delete('/:id', async (req, res) => {
     }
 
     await blog.remove()
+    //to-do: remove blog._id from user.blogs array
+    //example code:
+    //!!!PENDING TEST
+    //user.blogs = user.blogs.filter( blog => blog.toString() != req.params.id )
+    //await user.save()
 
     return res.status(204).end()
 })

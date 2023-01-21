@@ -12,25 +12,22 @@ const { route } = require('../app')
 describe('test blog routes', () => {
     beforeEach(async () => {
         await User.deleteMany({})
-
         const passwordHash = await bcrypt.hash("password", 10)
         const user = new User({
             username: "testUsername",
             name: "testName",
             passwordHash: passwordHash
         })
-
         await user.save()
 
         await Blog.deleteMany({});
-
         for (let blog of helper.initialBlogs){
             let blogObj = new Blog(blog);
             blogObj.user = user._id
             await blogObj.save()
             user.blogs = user.blogs.concat(blogObj._id)
-            await user.save()
         }
+        await user.save()
     })
 
     test('HTTP GET request to the /api/blogs return the correct amount of blogs', async () => {
@@ -198,25 +195,22 @@ describe('test user routes', () => {
 
         // await user.save()
         await User.deleteMany({})
-
         const passwordHash = await bcrypt.hash("password", 10)
         const user = new User({
             username: "testUsername",
             name: "testName",
             passwordHash: passwordHash
         })
-
         await user.save()
 
         await Blog.deleteMany({});
-
         for (let blog of helper.initialBlogs){
             let blogObj = new Blog(blog);
             blogObj.user = user._id
             await blogObj.save()
             user.blogs = user.blogs.concat(blogObj._id)
-            await user.save()
         }
+        await user.save()
     })
 
     test('users with username shorter than 3 characters are not created', async () => {
