@@ -3,6 +3,8 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +15,7 @@ const App = () => {
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogURL, setBlogURL] = useState('')
   const [notification, setNotification] = useState({message: '', type: ''})
+  const [blogFormVisible, setBlogFormVisible] = useState(false)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -83,39 +86,6 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        title:
-        <input
-          type="text"
-          value={blogTitle}
-          name="Blogtitle"
-          onChange={({target}) => setBlogTitle(target.value)}
-        />
-      </div>
-      <div>
-        author:
-        <input
-          type="text"
-          value={blogAuthor}
-          name="Blogauthor"
-          onChange={({target}) => setBlogAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url:
-        <input
-          type="text"
-          value={blogURL}
-          name="BlogURL"
-          onChange={({target}) => setBlogURL(target.value)}
-        />
-      </div>
-      <button type="submit">save</button>
-    </form>
-  )
-
   const addBlog = async (event) => {
     event.preventDefault()
     const newBlog = {
@@ -137,6 +107,9 @@ const App = () => {
     setBlogURL('')
   }
 
+  const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
+  const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -150,8 +123,17 @@ const App = () => {
               <button onClick={handleLogout}>logout</button>
             </p>
           </div>
-          <h2>new blog</h2>
-          {blogForm()}
+          {/* <div style={hideWhenVisible}>
+            <button onClick={() => setBlogFormVisible(true)}>new blog</button>
+          </div>
+          <div style={showWhenVisible}>
+            <h2>new blog</h2>
+            <BlogForm addBlog={addBlog} blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor} blogTitle={blogTitle} setBlogTitle={setBlogTitle} blogURL={blogURL} setBlogURL={setBlogURL}/>
+            <button onClick={() => setBlogFormVisible(false)}>cancel</button>
+          </div> */}
+          <Togglable buttonLabel='new blog'>
+            <BlogForm addBlog={addBlog} blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor} blogTitle={blogTitle} setBlogTitle={setBlogTitle} blogURL={blogURL} setBlogURL={setBlogURL}/>
+          </Togglable>
         </>
       }
       <div>
