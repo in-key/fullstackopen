@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -14,8 +14,7 @@ const App = () => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogURL, setBlogURL] = useState('')
-  const [notification, setNotification] = useState({message: '', type: ''})
-  const [blogFormVisible, setBlogFormVisible] = useState(false)
+  const [notification, setNotification] = useState({ message: '', type: '' })
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -46,12 +45,12 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setNotification({
-        message: `Incorrect username or password`,
+        message: 'Incorrect username or password',
         type: 'error'
       })
       setTimeout(() => {
-        setNotification({message: '', type: ''})
-      }, 5000);
+        setNotification({ message: '', type: '' })
+      }, 5000)
       console.log(exception)
     }
   }
@@ -66,7 +65,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -75,7 +74,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -86,8 +85,11 @@ const App = () => {
     </form>
   )
 
+  const blogFormRef = useRef()
+
   const addBlog = async (event) => {
     event.preventDefault()
+    blogFormRef.current.toggleVisibility()
     const newBlog = {
       title: blogTitle,
       author: blogAuthor,
@@ -99,16 +101,13 @@ const App = () => {
       type: 'notification'
     })
     setTimeout(() => {
-      setNotification({message: '', type: ''})
-    }, 5000);
+      setNotification({ message: '', type: '' })
+    }, 5000)
     setBlogs(blogs.concat(savedBlog))
     setBlogAuthor('')
     setBlogTitle('')
     setBlogURL('')
   }
-
-  const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
-  const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
 
   return (
     <div>
@@ -123,22 +122,14 @@ const App = () => {
               <button onClick={handleLogout}>logout</button>
             </p>
           </div>
-          {/* <div style={hideWhenVisible}>
-            <button onClick={() => setBlogFormVisible(true)}>new blog</button>
-          </div>
-          <div style={showWhenVisible}>
-            <h2>new blog</h2>
-            <BlogForm addBlog={addBlog} blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor} blogTitle={blogTitle} setBlogTitle={setBlogTitle} blogURL={blogURL} setBlogURL={setBlogURL}/>
-            <button onClick={() => setBlogFormVisible(false)}>cancel</button>
-          </div> */}
-          <Togglable buttonLabel='new blog'>
+          <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm addBlog={addBlog} blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor} blogTitle={blogTitle} setBlogTitle={setBlogTitle} blogURL={blogURL} setBlogURL={setBlogURL}/>
           </Togglable>
         </>
       }
       <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs}/>
         )}
       </div>
     </div>

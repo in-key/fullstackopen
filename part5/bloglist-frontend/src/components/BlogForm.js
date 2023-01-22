@@ -1,5 +1,5 @@
-const BlogForm = ({addBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, blogURL, setBlogURL}) => {
-    return (
+const BlogForm = ({ addBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, blogURL, setBlogURL }) => {
+  return (
     <form onSubmit={addBlog}>
       <div>
         title:
@@ -7,7 +7,7 @@ const BlogForm = ({addBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, 
           type="text"
           value={blogTitle}
           name="Blogtitle"
-          onChange={({target}) => setBlogTitle(target.value)}
+          onChange={({ target }) => setBlogTitle(target.value)}
         />
       </div>
       <div>
@@ -16,7 +16,7 @@ const BlogForm = ({addBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, 
           type="text"
           value={blogAuthor}
           name="Blogauthor"
-          onChange={({target}) => setBlogAuthor(target.value)}
+          onChange={({ target }) => setBlogAuthor(target.value)}
         />
       </div>
       <div>
@@ -25,11 +25,11 @@ const BlogForm = ({addBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, 
           type="text"
           value={blogURL}
           name="BlogURL"
-          onChange={({target}) => setBlogURL(target.value)}
+          onChange={({ target }) => setBlogURL(target.value)}
         />
       </div>
       <button type="submit">create</button>
     </form>
-)}
+  )}
 
 export default BlogForm
