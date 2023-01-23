@@ -28,14 +28,14 @@ const Blog = ({ blog, blogs, setBlogs }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
+      <div className='blogheading'>
         {blog.title} {blog.author}
-        <button onClick={() => setDetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
+        <button className='visibilityButton' onClick={() => setDetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
       </div>
       { detailVisible &&
         <>
-          <div>{blog.url}</div>
-          <div>
+          <div className='blogurl'>{blog.url}</div>
+          <div className='bloglikes'>
             likes {blog.likes}
             <button onClick={handleLike}>like</button>
           </div>
