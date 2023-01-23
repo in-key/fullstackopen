@@ -10,21 +10,6 @@ const Blog = ({ blog, handleLike, handleRemoveBlog }) => {
     marginBottom: 5
   }
 
-  // const handleLike = async () => {
-  //   const newLikes = {
-  //     likes: blog.likes + 1
-  //   }
-  //   const res = await blogService.addLike(blog.id, newLikes)
-  //   setBlogs(blogs.map(b => b.id === res.id ? { ...b, likes: res.likes } : b))
-  // }
-
-  // const handleRemoveBlog = async () => {
-  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
-  //     await blogService.deleteBlog(blog.id)
-  //     setBlogs(blogs.filter(b => b.id !== blog.id))
-  //   }
-  // }
-
   return (
     <div style={blogStyle}>
       <div className='blogheading'>

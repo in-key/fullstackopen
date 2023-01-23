@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -11,9 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogURL, setBlogURL] = useState('')
   const [notification, setNotification] = useState({ message: '', type: '' })
 
   useEffect(() => {
@@ -85,28 +82,16 @@ const App = () => {
     </form>
   )
 
-  const blogFormRef = useRef()
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-    blogFormRef.current.toggleVisibility()
-    const newBlog = {
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogURL
-    }
+  const createBlog = async (newBlog) => {
     const savedBlog = await blogService.create(newBlog)
     setNotification({
-      message: `Successfully added a new blog ${blogTitle} by ${blogAuthor}`,
+      message: `Successfully added a new blog ${savedBlog.title} by ${savedBlog.author}`,
       type: 'notification'
     })
     setTimeout(() => {
       setNotification({ message: '', type: '' })
     }, 5000)
     setBlogs(blogs.concat(savedBlog))
-    setBlogAuthor('')
-    setBlogTitle('')
-    setBlogURL('')
   }
 
   const handleLike = async (blog) => {
@@ -137,8 +122,8 @@ const App = () => {
               <button onClick={handleLogout}>logout</button>
             </p>
           </div>
-          <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm addBlog={addBlog} blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor} blogTitle={blogTitle} setBlogTitle={setBlogTitle} blogURL={blogURL} setBlogURL={setBlogURL}/>
+          <Togglable buttonLabel='new blog'>
+            <BlogForm createBlog={createBlog}/>
           </Togglable>
         </>
       }

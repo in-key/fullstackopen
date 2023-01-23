@@ -1,7 +1,7 @@
-import { useState, forwardRef, useImperativeHandle } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Togglable = forwardRef((props, refs) => {
+const Togglable = (props) => {
   const [blogFormVisible, setBlogFormVisible] = useState(false)
 
   const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
@@ -10,12 +10,6 @@ const Togglable = forwardRef((props, refs) => {
   const toggleVisibility = () => {
     setBlogFormVisible(!blogFormVisible)
   }
-
-  useImperativeHandle(refs, () => {
-    return {
-      toggleVisibility
-    }
-  })
 
   Togglable.propTypes = {
     buttonLabel: PropTypes.string.isRequired
@@ -29,11 +23,11 @@ const Togglable = forwardRef((props, refs) => {
         <button onClick={toggleVisibility}>{props.buttonLabel}</button>
       </div>
       <div style={showWhenVisible}>
-        {props.children}
+        {React.cloneElement(props.children, { toggleVisibility: toggleVisibility })}
         <button onClick={toggleVisibility}>cancel</button>
       </div>
     </>
   )
-})
+}
 
 export default Togglable
