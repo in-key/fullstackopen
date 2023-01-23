@@ -3,10 +3,10 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
+import BlogForm from './BlogForm'
 
 describe('Blog component', () => {
   let container
-  let mockBlogs
   const mockHandler = jest.fn()
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('Blog component', () => {
       }
     }
 
-    container = render(<Blog blog={blog} blogs={mockBlogs} setBlogs={mockHandler}/>).container
+    container = render(<Blog blog={blog} handleLike={mockHandler}/>).container
   })
 
   test('renders the blog\'s title and author, but does not render its URL or number of likes by default', () => {
@@ -52,3 +52,24 @@ describe('Blog component', () => {
     expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
+
+// describe('BlogForm component', () => {
+//   let container
+//   const mockTitleFn = jest.fn()
+//   const mockAuthorFn = jest.fn()
+//   const mockURLFn = jest.fn()
+
+//   beforeEach(() => {
+//     const blog = {
+//       title: 'mockTitle',
+//       author: 'mockAuthor',
+//       url: 'mockurl.com',
+//       likes: 6,
+//       user: {
+//         name: 'mockUser'
+//       }
+//     }
+
+//     container = render(<BlogForm blog={blog} handleLike={mockHandler}/>).container
+//   })
+// })

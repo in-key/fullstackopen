@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, handleLike, handleRemoveBlog }) => {
   const [detailVisible, setDetailVisible] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -11,20 +10,20 @@ const Blog = ({ blog, blogs, setBlogs }) => {
     marginBottom: 5
   }
 
-  const handleLike = async () => {
-    const newLikes = {
-      likes: blog.likes + 1
-    }
-    const res = await blogService.addLike(blog.id, newLikes)
-    setBlogs(blogs.map(b => b.id === res.id ? { ...b, likes: res.likes } : b))
-  }
+  // const handleLike = async () => {
+  //   const newLikes = {
+  //     likes: blog.likes + 1
+  //   }
+  //   const res = await blogService.addLike(blog.id, newLikes)
+  //   setBlogs(blogs.map(b => b.id === res.id ? { ...b, likes: res.likes } : b))
+  // }
 
-  const handleRemoveBlog = async () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
-      await blogService.deleteBlog(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
-    }
-  }
+  // const handleRemoveBlog = async () => {
+  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
+  //     await blogService.deleteBlog(blog.id)
+  //     setBlogs(blogs.filter(b => b.id !== blog.id))
+  //   }
+  // }
 
   return (
     <div style={blogStyle}>
@@ -37,11 +36,11 @@ const Blog = ({ blog, blogs, setBlogs }) => {
           <div className='blogurl'>{blog.url}</div>
           <div className='bloglikes'>
             likes {blog.likes}
-            <button onClick={handleLike}>like</button>
+            <button onClick={() => handleLike(blog)}>like</button>
           </div>
           <div>{blog.user.name}</div>
           <div>
-            <button onClick={handleRemoveBlog}>remove</button>
+            <button onClick={() => handleRemoveBlog(blog)}>remove</button>
           </div>
         </>
       }

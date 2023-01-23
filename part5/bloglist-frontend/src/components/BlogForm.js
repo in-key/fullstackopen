@@ -1,6 +1,6 @@
 const BlogForm = ({ addBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, blogURL, setBlogURL }) => {
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={(e) => addBlog(e, blogTitle, blogAuthor, blogURL)}>
       <div>
         title:
         <input

@@ -109,6 +109,21 @@ const App = () => {
     setBlogURL('')
   }
 
+  const handleLike = async (blog) => {
+    const newLikes = {
+      likes: blog.likes + 1
+    }
+    const res = await blogService.addLike(blog.id, newLikes)
+    setBlogs(blogs.map(b => b.id === res.id ? { ...b, likes: res.likes } : b))
+  }
+
+  const handleRemoveBlog = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
+      await blogService.deleteBlog(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    }
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -129,7 +144,7 @@ const App = () => {
       }
       <div>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs}/>
+          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} handleLike={handleLike} handleRemoveBlog={handleRemoveBlog}/>
         )}
       </div>
     </div>
