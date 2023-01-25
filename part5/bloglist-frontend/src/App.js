@@ -22,6 +22,11 @@ const App = () => {
         setBlogs( blogs )
       )
       setUser(user)
+    } else {
+      blogService
+        .getAll().then(initialBlogs => {
+          setBlogs(initialBlogs)
+        })
     }
   }, [])
 
@@ -78,7 +83,7 @@ const App = () => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id='login-button' type="submit">login</button>
     </form>
   )
 
@@ -129,7 +134,7 @@ const App = () => {
       }
       <div>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} handleLike={handleLike} handleRemoveBlog={handleRemoveBlog}/>
+          <Blog key={blog.id} blog={blog} user={user} handleLike={handleLike} handleRemoveBlog={handleRemoveBlog}/>
         )}
       </div>
     </div>
