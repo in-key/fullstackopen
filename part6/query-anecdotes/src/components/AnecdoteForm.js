@@ -14,11 +14,20 @@ const AnecdoteForm = ({dispatch}) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    newAnecdoteMutation.mutate({ content, votes: 0 })
-    dispatch({ type: 'SET_NOTIFICATION', payload: `anecdote '${content}' created` })
-    setTimeout(() => {
-      dispatch({ type: 'RESET_NOTIFICATION' })
-    }, 5000);
+    newAnecdoteMutation.mutate({ content, votes: 0 }, {
+      onError: () => {
+        dispatch({ type: 'SET_NOTIFICATION', payload: `anecdote must be at least 5 characters long` })
+        setTimeout(() => {
+          dispatch({ type: 'RESET_NOTIFICATION' })
+        }, 5000);
+      },
+      onSuccess: () => {
+        dispatch({ type: 'SET_NOTIFICATION', payload: `anecdote '${content}' created` })
+        setTimeout(() => {
+          dispatch({ type: 'RESET_NOTIFICATION' })
+        }, 5000);
+      }
+    })
 }
 
   return (
