@@ -1,11 +1,11 @@
-import { createFilter } from "../reducers/anecdoteReducer"
+import { setFilter } from "../reducers/filterSlice"
 import { useDispatch } from "react-redux"
 
 const Filter  = () => {
     const dispatch = useDispatch()
 
     const handleChange = (event) => {
-        const action = createFilter(event.target.value)
+        const action = setFilter(event.target.value)
         dispatch(action)
     }
 
