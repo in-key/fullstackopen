@@ -2,8 +2,22 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { getAnecdotes, updateVote } from './requests'
+import { useReducer } from 'react'
+
+const notificationReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_NOTIFICATION':
+      return action.payload
+    case 'RESET_NOTIFICATION':
+      return ''
+    default:
+      return state
+  }
+}
 
 const App = () => {
+  const [notification, notificationDispatch] = useReducer(notificationReducer, '')
+
   const queryClient = useQueryClient()
 
   const updateAnecdoteMutation = useMutation(updateVote, {
@@ -13,8 +27,11 @@ const App = () => {
   })
 
   const handleVote = (anecdote) => {
-    console.log('vote')
     updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
+    notificationDispatch({ type: 'SET_NOTIFICATION', payload: `you voted for '${anecdote.content}'` })
+    setTimeout(() => {
+      notificationDispatch({ type: 'RESET_NOTIFICATION' })
+    }, 5000);
   }
 
   const res = useQuery('anecdotes', getAnecdotes, {
@@ -26,8 +43,11 @@ const App = () => {
   }
 
   if (res.isError){
-    return <div>anecdote service not available due to problems in server</div>
-  }
+    return (
+    <div>
+      anecdote service not available due to problems in server
+    </div>
+  )}
 
   const anecdotes = res.data
 
@@ -35,8 +55,8 @@ const App = () => {
     <div>
       <h3>Anecdote app</h3>
 
-      <Notification />
-      <AnecdoteForm />
+      <Notification notification={notification}/>
+      <AnecdoteForm dispatch={notificationDispatch}/>
 
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
