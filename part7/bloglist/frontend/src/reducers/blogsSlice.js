@@ -6,10 +6,11 @@ const blogsSlice = createSlice({
   initialState: [],
   reducers: {
     initializeBlogs(state, action) {
-      return action.payload
+      return action.payload.sort((a, b) => b.likes - a.likes)
     },
     createBlog(state, action) {
       state.push(action.payload)
+      state.sort((a, b) => b.likes - a.likes)
     },
     likeBlog(state, action) {
       const blogToUpdate = action.payload
@@ -27,6 +28,7 @@ const blogsSlice = createSlice({
 })
 
 export default blogsSlice.reducer
+export const { resetBlogs } = blogsSlice.actions
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
@@ -35,7 +37,7 @@ export const initializeBlogs = () => {
   }
 }
 
-export const createBlog = (newBlog) => {
+export const createNewBlog = (newBlog) => {
   return async (dispatch) => {
     const savedBlog = await blogService.create(newBlog)
     dispatch(blogsSlice.actions.createBlog(savedBlog))

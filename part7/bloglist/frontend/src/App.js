@@ -6,15 +6,25 @@ import loginService from "./services/login"
 import BlogForm from "./components/BlogForm"
 import Togglable from "./components/Togglable"
 import { setNotification } from "./reducers/notificationSlice"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  initializeBlogs,
+  createNewBlog,
+  likeBlog,
+  removeBlog,
+  resetBlogs,
+} from "./reducers/blogsSlice"
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
+
+  const blogs = useSelector((state) => state.blogs)
+
+  const setBlogs = () => null
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser")
@@ -23,8 +33,8 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
     }
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -35,8 +45,7 @@ const App = () => {
       })
       window.localStorage.setItem("loggedBloglistUser", JSON.stringify(user))
       blogService.setToken(user.token)
-      const returnedBlog = await blogService.getAll()
-      setBlogs(returnedBlog)
+      dispatch(initializeBlogs())
       setUser(user)
       setUsername("")
       setPassword("")
@@ -53,7 +62,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistUser")
     setUser(null)
-    setBlogs([])
+    dispatch(resetBlogs())
   }
 
   const loginForm = () => (
@@ -83,14 +92,13 @@ const App = () => {
   )
 
   const createBlog = async (newBlog) => {
-    const savedBlog = await blogService.create(newBlog)
+    dispatch(createNewBlog(newBlog))
     dispatch(
       setNotification({
-        message: `Successfully added a new blog ${savedBlog.title} by ${savedBlog.author}`,
+        message: `Successfully added a new blog ${newBlog.title} by ${newBlog.author}`,
         type: "notification",
       })
     )
-    setBlogs(blogs.concat(savedBlog))
   }
 
   const handleLike = async (blog) => {
@@ -128,9 +136,8 @@ const App = () => {
             <BlogForm createBlog={createBlog} />
           </Togglable>
           <div>
-            {blogs
-              .sort((a, b) => b.likes - a.likes)
-              .map((blog) => (
+            {blogs &&
+              blogs.map((blog) => (
                 <Blog
                   key={blog.id}
                   blog={blog}
