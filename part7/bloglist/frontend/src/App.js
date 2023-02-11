@@ -19,7 +19,6 @@ import { setUser, resetUser } from "./reducers/userSlice"
 const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  // const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
 
@@ -61,7 +60,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistUser")
-    dispatch(setUser(null))
+    dispatch(resetUser())
     dispatch(resetBlogs())
   }
 
