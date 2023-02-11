@@ -1,0 +1,13 @@
+.navbar {
+  display: flex;
+  background-color: lightgray;
+  padding: 5px;
+}
+
+.navlink {
+  padding: 0 5px;
+}
+
+.navbar > button {
+  margin: 0 5px;
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
-import Blog from "./components/Blog"
+// import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import BlogForm from "./components/BlogForm"
 import Togglable from "./components/Togglable"
@@ -11,14 +11,16 @@ import { setNotification } from "./reducers/notificationSlice"
 import {
   initializeBlogs,
   createNewBlog,
-  likeBlog,
-  removeBlog,
+  // likeBlog,
+  // removeBlog,
   resetBlogs,
 } from "./reducers/blogsSlice"
 import { setUser, resetUser } from "./reducers/userSlice"
 import { initializeUsers } from "./reducers/usersSlice"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import User from "./components/User"
+import BlogDetail from "./components/BlogDetail"
+import "./App.css"
 
 const App = () => {
   const [username, setUsername] = useState("")
@@ -106,15 +108,15 @@ const App = () => {
     )
   }
 
-  const handleLike = async (blog) => {
-    dispatch(likeBlog(blog))
-  }
+  // const handleLike = async (blog) => {
+  //   dispatch(likeBlog(blog))
+  // }
 
-  const handleRemoveBlog = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      dispatch(removeBlog(blog))
-    }
-  }
+  // const handleRemoveBlog = async (blog) => {
+  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+  //     dispatch(removeBlog(blog))
+  //   }
+  // }
 
   if (!user) {
     return (
@@ -129,14 +131,18 @@ const App = () => {
   return (
     <BrowserRouter>
       <div>
-        <h2>blogs</h2>
-        <Notification />
-        <div>
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogout}>logout</button>
-          </p>
+        <div className="navbar">
+          <div className="navlink">
+            <Link to="/">blogs</Link>
+          </div>
+          <div className="navlink">
+            <Link to="/users">users</Link>
+          </div>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
         </div>
+        <h2>blog app</h2>
+        <Notification />
         <Routes>
           <Route
             path="/"
@@ -148,13 +154,16 @@ const App = () => {
                 <div>
                   {blogs &&
                     blogs.map((blog) => (
-                      <Blog
-                        key={blog.id}
-                        blog={blog}
-                        user={user}
-                        handleLike={handleLike}
-                        handleRemoveBlog={handleRemoveBlog}
-                      />
+                      // <Blog
+                      //   key={blog.id}
+                      //   blog={blog}
+                      //   user={user}
+                      //   handleLike={handleLike}
+                      //   handleRemoveBlog={handleRemoveBlog}
+                      // />
+                      <div key={blog.id}>
+                        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                      </div>
                     ))}
                 </div>
               </>
@@ -162,6 +171,7 @@ const App = () => {
           />
           <Route path="/users" element={<UserList users={users} />} />
           <Route path="/users/:id" element={<User />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
         </Routes>
       </div>
     </BrowserRouter>
