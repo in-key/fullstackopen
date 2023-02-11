@@ -1,11 +1,10 @@
-import './Notification.css'
+import "./Notification.css"
+import { useSelector } from "react-redux"
 
-const Notification = ({ notification }) => {
-  return (
-    <div className={notification.type}>
-      {notification.message}
-    </div>
-  )
+const Notification = () => {
+  const state = useSelector((state) => state)
+  const notification = useSelector((state) => state.notification)
+  return <div className={notification.type}>{notification.message}</div>
 }
 
 export default Notification
