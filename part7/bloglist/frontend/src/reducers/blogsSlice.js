@@ -16,6 +16,7 @@ const blogsSlice = createSlice({
       const blogToUpdate = action.payload
       const foundBlog = state.find((b) => b.id === blogToUpdate.id)
       foundBlog.likes++
+      state.sort((a, b) => b.likes - a.likes)
     },
     removeBlog(state, action) {
       const blogToRemove = action.payload
