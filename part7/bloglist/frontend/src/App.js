@@ -17,7 +17,8 @@ import {
 } from "./reducers/blogsSlice"
 import { setUser, resetUser } from "./reducers/userSlice"
 import { initializeUsers } from "./reducers/usersSlice"
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import User from "./components/User"
 
 const App = () => {
   const [username, setUsername] = useState("")
@@ -160,6 +161,7 @@ const App = () => {
             }
           />
           <Route path="/users" element={<UserList users={users} />} />
+          <Route path="/users/:id" element={<User />} />
         </Routes>
       </div>
     </BrowserRouter>
