@@ -21,13 +21,9 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       blogService.setToken(user.token)
-      blogService.getAll().then((blogs) => setBlogs(blogs))
       setUser(user)
-    } else {
-      blogService.getAll().then((initialBlogs) => {
-        setBlogs(initialBlogs)
-      })
     }
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   const handleLogin = async (event) => {
