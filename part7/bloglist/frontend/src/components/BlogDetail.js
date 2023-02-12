@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { likeBlog } from "../reducers/blogsSlice"
+import { likeBlog, addComment } from "../reducers/blogsSlice"
 
 const BlogDetail = () => {
   const { id } = useParams()
@@ -10,6 +10,12 @@ const BlogDetail = () => {
   )
   const handleLike = async (blog) => {
     dispatch(likeBlog(blog))
+  }
+  const handleComment = async (e) => {
+    e.preventDefault()
+    const comment = e.target.comment.value
+    dispatch(addComment(id, comment))
+    e.target.comment.value = ""
   }
   return (
     <div>
@@ -25,6 +31,10 @@ const BlogDetail = () => {
           </div>
           <div>added by {blog.user.name}</div>
           <h3>Comments</h3>
+          <form onSubmit={handleComment}>
+            <input name="comment" />
+            <button>submit</button>
+          </form>
           <ul>
             {blog.comments.map((comment) => (
               <li key={comment.id}>{comment.comment}</li>

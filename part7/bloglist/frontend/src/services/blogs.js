@@ -1,9 +1,9 @@
-import axios from 'axios'
-const baseUrl = '/api/blogs'
+import axios from "axios"
+const baseUrl = "/api/blogs"
 
 let token = null
 
-const setToken = newToken => {
+const setToken = (newToken) => {
   token = `bearer ${newToken}`
 }
 
@@ -39,4 +39,9 @@ const deleteBlog = async (id) => {
   return response.data
 }
 
-export default { getAll, create, addLike, deleteBlog, setToken }
+const addComment = async (id, comment) => {
+  const res = await axios.post(`${baseUrl}/${id}/comments`, { comment })
+  return res.data
+}
+
+export default { setToken, getAll, create, addLike, deleteBlog, addComment }
