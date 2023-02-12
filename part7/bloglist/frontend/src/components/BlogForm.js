@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState } from "react"
+import { Form, Button } from "react-bootstrap"
 
 const BlogForm = ({ createBlog, toggleVisibility }) => {
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogURL, setBlogURL] = useState('')
+  const [blogTitle, setBlogTitle] = useState("")
+  const [blogAuthor, setBlogAuthor] = useState("")
+  const [blogURL, setBlogURL] = useState("")
 
   const addBlog = async (event) => {
     event.preventDefault()
@@ -11,48 +12,52 @@ const BlogForm = ({ createBlog, toggleVisibility }) => {
     const newBlog = {
       title: blogTitle,
       author: blogAuthor,
-      url: blogURL
+      url: blogURL,
     }
     createBlog(newBlog)
-    setBlogAuthor('')
-    setBlogTitle('')
-    setBlogURL('')
+    setBlogAuthor("")
+    setBlogTitle("")
+    setBlogURL("")
   }
 
   return (
-    <form onSubmit={(e) => addBlog(e)}>
-      <div>
-        title:
-        <input
+    <Form onSubmit={addBlog} className="w-50">
+      <Form.Group>
+        <Form.Label>title:</Form.Label>
+        <Form.Control
           type="text"
           value={blogTitle}
           name="Blogtitle"
-          id='title-input'
+          id="title-input"
           onChange={({ target }) => setBlogTitle(target.value)}
         />
-      </div>
-      <div>
-        author:
-        <input
+        <Form.Label>author:</Form.Label>
+        <Form.Control
           type="text"
           value={blogAuthor}
           name="Blogauthor"
-          id='author-input'
+          id="author-input"
           onChange={({ target }) => setBlogAuthor(target.value)}
         />
-      </div>
-      <div>
-        url:
-        <input
+        <Form.Label>url:</Form.Label>
+        <Form.Control
           type="text"
           value={blogURL}
           name="BlogURL"
-          id='url-input'
+          id="url-input"
           onChange={({ target }) => setBlogURL(target.value)}
         />
-      </div>
-      <button id='create-blog-button' type="submit">create</button>
-    </form>
-  )}
+        <Button
+          variant="outline-primary"
+          size="sm"
+          id="create-blog-button"
+          type="submit"
+        >
+          create
+        </Button>
+      </Form.Group>
+    </Form>
+  )
+}
 
 export default BlogForm

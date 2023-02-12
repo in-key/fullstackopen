@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
-// import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import BlogForm from "./components/BlogForm"
 import Togglable from "./components/Togglable"
 import UserList from "./components/UserList"
+import Navigation from "./components/Navigation"
 import { useDispatch, useSelector } from "react-redux"
 import { setNotification } from "./reducers/notificationSlice"
 import {
   initializeBlogs,
   createNewBlog,
-  // likeBlog,
-  // removeBlog,
   resetBlogs,
 } from "./reducers/blogsSlice"
 import { setUser, resetUser } from "./reducers/userSlice"
@@ -20,7 +18,7 @@ import { initializeUsers } from "./reducers/usersSlice"
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import User from "./components/User"
 import BlogDetail from "./components/BlogDetail"
-import "./App.css"
+import { Table, Form, Button } from "react-bootstrap"
 
 const App = () => {
   const [username, setUsername] = useState("")
@@ -60,7 +58,7 @@ const App = () => {
       dispatch(
         setNotification({
           message: "Incorrect username or password",
-          type: "error",
+          type: "danger",
         })
       )
     }
@@ -73,29 +71,27 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
+    <Form onSubmit={handleLogin}>
+      <Form.Group>
+        <Form.Label>username</Form.Label>
+        <Form.Control
           type="text"
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
         />
-      </div>
-      <div>
-        password
-        <input
+        <Form.Label>password</Form.Label>
+        <Form.Control
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
-      </div>
-      <button id="login-button" type="submit">
-        login
-      </button>
-    </form>
+        <Button id="login-button" type="submit">
+          login
+        </Button>
+      </Form.Group>
+    </Form>
   )
 
   const createBlog = async (newBlog) => {
@@ -103,24 +99,14 @@ const App = () => {
     dispatch(
       setNotification({
         message: `Successfully added a new blog ${newBlog.title} by ${newBlog.author}`,
-        type: "notification",
+        type: "success",
       })
     )
   }
 
-  // const handleLike = async (blog) => {
-  //   dispatch(likeBlog(blog))
-  // }
-
-  // const handleRemoveBlog = async (blog) => {
-  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-  //     dispatch(removeBlog(blog))
-  //   }
-  // }
-
   if (!user) {
     return (
-      <div>
+      <div className="container">
         <h2>blogs</h2>
         <Notification />
         {loginForm()}
@@ -130,17 +116,8 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div>
-        <div className="navbar">
-          <div className="navlink">
-            <Link to="/">blogs</Link>
-          </div>
-          <div className="navlink">
-            <Link to="/users">users</Link>
-          </div>
-          {user.name} logged in
-          <button onClick={handleLogout}>logout</button>
-        </div>
+      <div className="container">
+        <Navigation user={user} handleLogout={handleLogout} />
         <h2>blog app</h2>
         <Notification />
         <Routes>
@@ -152,19 +129,19 @@ const App = () => {
                   <BlogForm createBlog={createBlog} />
                 </Togglable>
                 <div>
-                  {blogs &&
-                    blogs.map((blog) => (
-                      // <Blog
-                      //   key={blog.id}
-                      //   blog={blog}
-                      //   user={user}
-                      //   handleLike={handleLike}
-                      //   handleRemoveBlog={handleRemoveBlog}
-                      // />
-                      <div key={blog.id}>
-                        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                      </div>
-                    ))}
+                  <Table striped>
+                    <tbody>
+                      {blogs &&
+                        blogs.map((blog) => (
+                          <tr key={blog.id}>
+                            <td>
+                              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                            </td>
+                            <td>{blog.author}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
                 </div>
               </>
             }

@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { likeBlog, addComment } from "../reducers/blogsSlice"
+import { Form, Button } from "react-bootstrap"
 
 const BlogDetail = () => {
   const { id } = useParams()
@@ -27,14 +28,24 @@ const BlogDetail = () => {
           <a href={blog.url}>{blog.url}</a>
           <div>
             {blog.likes} likes{" "}
-            <button onClick={() => handleLike(blog)}>like</button>
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={() => handleLike(blog)}
+            >
+              like
+            </Button>
           </div>
           <div>added by {blog.user.name}</div>
           <h3>Comments</h3>
-          <form onSubmit={handleComment}>
-            <input name="comment" />
-            <button>submit</button>
-          </form>
+          <Form onSubmit={handleComment}>
+            <Form.Group>
+              <Form.Control className="w-50" type="text" name="comment" />
+              <Button variant="outline-primary" size="sm" type="submit">
+                submit
+              </Button>
+            </Form.Group>
+          </Form>
           <ul>
             {blog.comments.map((comment) => (
               <li key={comment.id}>{comment.comment}</li>
