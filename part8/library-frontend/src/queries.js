@@ -18,6 +18,28 @@ export const ALL_BOOKS = gql`
       published
       author
       genres
+      id
+    }
+  }
+`
+
+export const ADD_BOOK = gql`
+  mutation addNewBook(
+    $title: String!
+    $published: Int!
+    $author: String!
+    $genres: [String!]!
+  ) {
+    addBook(
+      title: $title
+      published: $published
+      author: $author
+      genres: $genres
+    ) {
+      title
+      published
+      author
+      genres
     }
   }
 `
