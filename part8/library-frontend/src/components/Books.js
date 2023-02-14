@@ -12,14 +12,19 @@ const Books = (props) => {
 
   if (result.loading) return <div>loading...</div>
 
-  const books = result.data.allBooks.filter((b) =>
+  const books = result.data.allBooks
+
+  const booksToShow = books.filter((b) =>
     filter.length > 0 ? b.genres.includes(filter) : b
   )
+
+  let genres = new Set(books.map((b) => b.genres).flat())
+  genres = Array.from(genres)
 
   return (
     <div>
       <h2>books</h2>
-
+      {filter.length > 0 && <div>in genre {filter}</div>}
       <table>
         <tbody>
           <tr>
@@ -27,7 +32,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((a) => (
+          {booksToShow.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -36,6 +41,12 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+      {genres.map((genre) => (
+        <button onClick={() => setFilter(genre)} key={genre}>
+          {genre}
+        </button>
+      ))}
+      <button onClick={() => setFilter("")}>all genres</button>
     </div>
   )
 }
