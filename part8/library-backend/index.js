@@ -162,11 +162,11 @@ const resolvers = {
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       if (args.author && args.genre) {
-        return Book.find({ author: args.author, genres: args.genre }).populate(
-          "author"
-        )
+        const author = await Author.findOne({ name: args.author })
+        return Book.find({ author, genres: args.genre }).populate("author")
       } else if (args.author) {
-        return Book.find({ author: args.author }).populate("author")
+        const author = await Author.findOne({ name: args.author })
+        return Book.find({ author }).populate("author")
       } else if (args.genre) {
         return Book.find({ genres: args.genre }).populate("author")
       } else {
@@ -176,19 +176,13 @@ const resolvers = {
     allAuthors: async () => Author.find({}),
   },
   Author: {
-    //not working with DB rn
-    bookCount: (root) => {
-      return books.filter((book) => book.author === root.name).length
+    bookCount: async (root) => {
+      const author = await Author.findOne({ name: root.name })
+      return Book.count({ author })
     },
   },
   Mutation: {
     addBook: async (root, args) => {
-      // if (!Author.exists({ name: args.author })) {
-      //   const author = new Author({ name: args.author })
-      //   await author.save()
-      //   const book = new Book({ ...args, author })
-      //   return book.save()
-      // }
       let author = await Author.findOne({ name: args.author })
       if (!author) {
         author = new Author({ name: args.author })
@@ -197,11 +191,11 @@ const resolvers = {
       const book = new Book({ ...args, author })
       return book.save()
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((a) => a.name === args.name)
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
       if (!author) return null
       author.born = args.setBornTo
-      return author
+      return author.save()
     },
   },
 }
