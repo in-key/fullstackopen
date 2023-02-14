@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client"
+import { useState } from "react"
 import { ALL_BOOKS } from "../queries"
 
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS)
+  const [filter, setFilter] = useState("")
 
   if (!props.show) {
     return null
@@ -10,7 +12,9 @@ const Books = (props) => {
 
   if (result.loading) return <div>loading...</div>
 
-  const books = result.data.allBooks
+  const books = result.data.allBooks.filter((b) =>
+    filter.length > 0 ? b.genres.includes(filter) : b
+  )
 
   return (
     <div>

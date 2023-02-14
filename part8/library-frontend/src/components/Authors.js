@@ -22,7 +22,9 @@ const Authors = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    editAuthor({ variables: { name, year: Number(year) } })
+    const author = name.length === 0 ? authors[0].name : name
+
+    editAuthor({ variables: { name: author, year: Number(year) } })
     setName("")
     setYear("")
   }
