@@ -1,15 +1,19 @@
 import { useQuery } from "@apollo/client"
 import { ALL_BOOKS, CURRENT_USER } from "../queries"
 
-const Recommend = (props) => {
+const Recommend = ({ show }) => {
+  const userResult = useQuery(CURRENT_USER, {
+    skip: !localStorage.getItem("library-user-token"),
+  })
   const result = useQuery(ALL_BOOKS)
-  const userResult = useQuery(CURRENT_USER)
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
   if (result.loading || userResult.loading) return <div>loading...</div>
+
+  console.log(userResult)
 
   const books = result.data.allBooks
   const user = userResult.data.me

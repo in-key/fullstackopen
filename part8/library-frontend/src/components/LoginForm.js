@@ -20,6 +20,8 @@ const LoginForm = ({ show, setToken, setPage }) => {
     e.preventDefault()
 
     await login({ variables: { username, password } })
+    setUsername("")
+    setPassword("")
     setPage("authors")
   }
 
@@ -32,6 +34,7 @@ const LoginForm = ({ show, setToken, setPage }) => {
         <div>
           username:
           <input
+            type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -39,6 +42,7 @@ const LoginForm = ({ show, setToken, setPage }) => {
         <div>
           password:
           <input
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

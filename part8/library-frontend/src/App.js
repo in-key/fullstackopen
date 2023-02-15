@@ -1,15 +1,18 @@
-import { useApolloClient } from "@apollo/client"
+import { useApolloClient, useLazyQuery } from "@apollo/client"
 import { useState } from "react"
 import Authors from "./components/Authors"
 import Books from "./components/Books"
 import LoginForm from "./components/LoginForm"
 import NewBook from "./components/NewBook"
 import Recommend from "./components/Recommend"
+import { CURRENT_USER } from "./queries"
 
 const App = () => {
   const [page, setPage] = useState("authors")
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+
+  // const [getUser, userResult] = useLazyQuery(CURRENT_USER)
 
   const logout = () => {
     setToken(null)
@@ -24,7 +27,14 @@ const App = () => {
         <button onClick={() => setPage("books")}>books</button>
         {token && <button onClick={() => setPage("add")}>add book</button>}
         {token && (
-          <button onClick={() => setPage("recommend")}>recommend</button>
+          <button
+            onClick={() => {
+              setPage("recommend")
+              // getUser()
+            }}
+          >
+            recommend
+          </button>
         )}
         {token && <button onClick={() => logout()}>logout</button>}
         {!token && <button onClick={() => setPage("login")}>login</button>}
