@@ -81,3 +81,12 @@ export const CURRENT_USER = gql`
     }
   }
 `
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetail
+    }
+  }
+  ${BOOK_DETAIL}
+`
