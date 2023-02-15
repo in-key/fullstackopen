@@ -5,7 +5,9 @@ import { ALL_BOOKS } from "../queries"
 const Books = (props) => {
   const [filter, setFilter] = useState("")
   const result = useQuery(ALL_BOOKS)
-  const [getFilteredBooks, { loading, data }] = useLazyQuery(ALL_BOOKS)
+  const [getFilteredBooks, { loading, data }] = useLazyQuery(ALL_BOOKS, {
+    fetchPolicy: "cache-and-network",
+  })
 
   if (!props.show) {
     return null
@@ -14,7 +16,8 @@ const Books = (props) => {
   if (result.loading || loading)
     return (
       <div>
-        <h2>books</h2>loading...
+        <h2>books</h2>
+        loading...
       </div>
     )
 
