@@ -13,13 +13,14 @@ const Books = (props) => {
     return null
   }
 
-  if (result.loading || loading)
+  if (result.loading || loading) {
     return (
       <div>
         <h2>books</h2>
         loading...
       </div>
     )
+  }
 
   const handleFilter = (genre) => {
     setFilter(genre)

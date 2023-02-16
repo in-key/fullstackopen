@@ -24,14 +24,11 @@ const resolvers = {
         return Book.find({}).populate("author")
       }
     },
-    allAuthors: async () => Author.find({}),
-    me: (root, args, context) => context.currentUser,
-  },
-  Author: {
-    bookCount: async (root) => {
-      const author = await Author.findOne({ name: root.name })
-      return Book.count({ author })
+    allAuthors: async () => {
+      console.log("Author.find")
+      return Author.find({})
     },
+    me: (root, args, context) => context.currentUser,
   },
   Mutation: {
     addBook: async (root, args, context) => {
@@ -47,7 +44,7 @@ const resolvers = {
 
       let author = await Author.findOne({ name: args.author })
       if (!author) {
-        author = new Author({ name: args.author })
+        author = new Author({ name: args.author, bookCount: 0 })
         try {
           await author.save()
         } catch (error) {
@@ -71,6 +68,9 @@ const resolvers = {
           },
         })
       }
+
+      author.bookCount = await Book.count({ author })
+      await author.save()
 
       pubsub.publish("BOOK_ADDED", { bookAdded: book })
 
