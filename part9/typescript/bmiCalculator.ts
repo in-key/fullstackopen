@@ -17,7 +17,7 @@ function parseArgs(args: string[]): MultiplyValues {
   }
 }
 
-function calculateBmi(height: number, weight: number) {
+export function calculateBmi(height: number, weight: number) {
   const bmi = weight / Math.pow(height / 100, 2);
 
   if (bmi < 16) {
