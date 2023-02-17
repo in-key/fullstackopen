@@ -1,3 +1,23 @@
+interface DaysTarget {
+  days: number[];
+  target: number;
+}
+
+function parseArgv(args: string[]): DaysTarget {
+  if (args.length < 4) throw new Error("Not enough arguments");
+
+  let ars = args.slice(2).map((a) => Number(a));
+
+  if (ars.some((a) => isNaN(a))) {
+    throw new Error("Provided values were not numbers!");
+  } else {
+    return {
+      target: ars[0],
+      days: ars.slice(1),
+    };
+  }
+}
+
 type trainingEval = {
   periodLength: number;
   trainingDays: number;
@@ -46,4 +66,13 @@ const calculateExercises = (days: number[], target: number): trainingEval => {
   return res;
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { days, target } = parseArgv(process.argv);
+  console.log(calculateExercises(days, target));
+} catch (error) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
