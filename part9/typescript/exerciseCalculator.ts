@@ -6,7 +6,7 @@ interface DaysTarget {
 function parseArgv(args: string[]): DaysTarget {
   if (args.length < 4) throw new Error("Not enough arguments");
 
-  let ars = args.slice(2).map((a) => Number(a));
+  const ars = args.slice(2).map((a) => Number(a));
 
   if (ars.some((a) => isNaN(a))) {
     throw new Error("Provided values were not numbers!");
@@ -28,7 +28,7 @@ type trainingEval = {
   average: number;
 };
 
-const calculateExercises = (days: number[], target: number): trainingEval => {
+export const calculateExercises = (days: number[], target: number): trainingEval => {
   const res = {
     periodLength: days.length,
     trainingDays: days.filter((d) => d > 0).length,
