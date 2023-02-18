@@ -3,7 +3,7 @@ import diagnosesService from "../services/diagnosesService";
 
 const router = express.Router();
 
-router.use("/", (_req, res) => {
+router.get("/", (_req, res) => {
   return res.json(diagnosesService.getAll());
 });
 
