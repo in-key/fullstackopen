@@ -15,8 +15,16 @@ const getAll = async () => {
 };
 
 const addNewDiary = async (diary: newDiary) => {
-  const res = await axios.post<diaryEntry>(baseUrl, diary);
-  return res.data;
+  try {
+    const res = await axios.post<diaryEntry>(baseUrl, diary);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error;
+    } else {
+      throw new Error("different error than axios");
+    }
+  }
 };
 
 export default {

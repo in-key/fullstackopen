@@ -9,6 +9,7 @@ function App() {
   const [visibility, setVisibility] = useState("");
   const [weather, setWeather] = useState("");
   const [comment, setComment] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     diaryService.getAll().then((data) => setDiaries(data));
@@ -16,22 +17,37 @@ function App() {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const addedDiary = await diaryService.addNewDiary({
-      date,
-      visibility,
-      weather,
-      comment,
-    });
+    try {
+      const addedDiary = await diaryService.addNewDiary({
+        date,
+        visibility,
+        weather,
+        comment,
+      });
+      setDiaries(diaries.concat(addedDiary));
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log(error);
+        setErrorMsg(error.response.data);
+        setTimeout(() => {
+          setErrorMsg("");
+        }, 5000);
+      }
+    }
     setDate("");
     setVisibility("");
     setWeather("");
     setComment("");
-    setDiaries(diaries.concat(addedDiary));
   };
   return (
     <div>
       <div>
         <h1>Add new entry</h1>
+        {errorMsg && (
+          <div style={{ border: "3px solid red", margin: 5, padding: 5 }}>
+            {errorMsg}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div>
             date{" "}
