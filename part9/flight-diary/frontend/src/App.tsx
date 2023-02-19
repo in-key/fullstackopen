@@ -11,6 +11,9 @@ function App() {
   const [comment, setComment] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const visibilityOptions = ["great", "good", "ok", "poor"];
+  const weatherOptions = ["sunny", "rainy", "cloudy", "stormy", "windy"];
+
   useEffect(() => {
     diaryService.getAll().then((data) => setDiaries(data));
   }, []);
@@ -50,25 +53,45 @@ function App() {
         )}
         <form onSubmit={handleSubmit}>
           <div>
-            date{" "}
-            <input value={date} onChange={(e) => setDate(e.target.value)} />
-          </div>
-          <div>
-            visibility{" "}
+            date:{" "}
             <input
-              value={visibility}
-              onChange={(e) => setVisibility(e.target.value)}
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
           <div>
-            weather{" "}
-            <input
-              value={weather}
-              onChange={(e) => setWeather(e.target.value)}
-            />
+            visibility:{" "}
+            {visibilityOptions.map((option) => (
+              <>
+                <input
+                  key={option}
+                  type="radio"
+                  name="visibility"
+                  checked={visibility === option}
+                  onChange={() => setVisibility(option)}
+                />
+                {option}
+              </>
+            ))}
           </div>
           <div>
-            comment{" "}
+            weather:{" "}
+            {weatherOptions.map((option) => (
+              <>
+                <input
+                  key={option}
+                  type="radio"
+                  name="weather"
+                  checked={weather === option}
+                  onChange={() => setWeather(option)}
+                />
+                {option}
+              </>
+            ))}
+          </div>
+          <div>
+            comment:{" "}
             <input
               value={comment}
               onChange={(e) => setComment(e.target.value)}
